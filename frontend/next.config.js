@@ -16,22 +16,11 @@ function apiImagePattern() {
 }
 
 const nextConfig = {
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "DENY" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
-        ],
-      },
-    ];
-  },
+  output: "export",
   images: {
+    unoptimized: true,
     remotePatterns: [apiImagePattern()],
-    dangerouslyAllowLocalIP: process.env.NODE_ENV !== "production",
+    dangerouslyAllowLocalIP: true,
   },
 };
 
