@@ -4,7 +4,8 @@ import ProductCard from "@/components/ProductCard";
 
 export async function generateStaticParams() {
   const categories = await getCategories().catch(() => []);
-  return categories.map((c) => ({ slug: c.slug }));
+  const slugs = categories.map((c) => ({ slug: c.slug }));
+  return slugs.length > 0 ? slugs : [{ slug: "panel" }, { slug: "aksesuar" }];
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {

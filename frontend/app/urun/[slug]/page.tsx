@@ -9,7 +9,8 @@ import ProductReviews from "@/components/ProductReviews";
 
 export async function generateStaticParams() {
   const products = await getProducts().catch(() => []);
-  return products.map((p) => ({ slug: p.slug }));
+  const slugs = products.map((p) => ({ slug: p.slug }));
+  return slugs.length > 0 ? slugs : [{ slug: "placeholder" }];
 }
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
