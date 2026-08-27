@@ -86,7 +86,7 @@ export default function CartPage() {
     try {
       const order = await checkoutCart(getSessionKey(), form);
       await refresh();
-      router.push(`/odeme/${(order as { id: number }).id}`);
+      router.push(`/odeme?id=${(order as { id: number }).id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Sipariş oluşturulamadı, lütfen tekrar deneyin.");
       setPlacing(false);

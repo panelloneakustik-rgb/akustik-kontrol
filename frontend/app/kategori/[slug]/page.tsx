@@ -2,6 +2,11 @@ import Link from "next/link";
 import { getCategories, getProducts } from "@/lib/api";
 import ProductCard from "@/components/ProductCard";
 
+export async function generateStaticParams() {
+  const categories = await getCategories().catch(() => []);
+  return categories.map((c) => ({ slug: c.slug }));
+}
+
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 

@@ -1,11 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Truck, RotateCcw, ShieldCheck } from "lucide-react";
-import { getProductBySlug, formatTL } from "@/lib/api";
+import { getProductBySlug, getProducts, formatTL } from "@/lib/api";
 import ProductGallery from "@/components/ProductGallery";
 import AddToCartBox from "@/components/AddToCartBox";
 import RelatedProducts from "@/components/RelatedProducts";
 import ProductReviews from "@/components/ProductReviews";
+
+export async function generateStaticParams() {
+  const products = await getProducts().catch(() => []);
+  return products.map((p) => ({ slug: p.slug }));
+}
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

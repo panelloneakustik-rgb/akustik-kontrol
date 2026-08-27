@@ -51,7 +51,7 @@ export type HeroSlide = {
 
 
 async function getJSON<T>(path: string): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, { next: { revalidate: 60 } });
+  const res = await fetch(`${API_BASE}${path}`, { cache: "force-cache" });
   if (!res.ok) throw new Error(`API ${path} failed: ${res.status}`);
   return res.json();
 }
