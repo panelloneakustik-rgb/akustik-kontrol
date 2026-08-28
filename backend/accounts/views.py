@@ -101,22 +101,20 @@ def google_login(request):
     email = payload.get("email")
     if not email:
         return Response({"detail": "Google hesabından e-posta alınamadı."}, status=status.HTTP_400_BAD_REQUEST)
+    if not payload.get("email_verified"):
+        return Response({"detail": "Google e-posta doğrulanmamış."}, status=status.HTTP_400_BAD_REQUEST)
 
     full_name = payload.get("name", "")
     first_name, _, last_name = full_name.partition(" ")
 
     user = User.objects.filter(email__iexact=email).first()
-    created = False
     if not user:
-        user = User.objects.create(
+        user = User.objects.create_user(
             username=email,
             email=email,
             first_name=first_name,
             last_name=last_name,
         )
-        created = True
-
-    if created:
         user.set_unusable_password()
         user.save()
 

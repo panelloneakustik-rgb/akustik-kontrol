@@ -11,6 +11,7 @@ import { formatTL } from "@/lib/api";
 import { checkoutCart, getSessionKey, type CheckoutInfo } from "@/lib/cart";
 import { listAddresses, type Address } from "@/lib/addresses";
 import { TURKISH_CITIES } from "@/lib/turkish-cities";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 
 const EMPTY_FORM: CheckoutInfo = {
   address_title: "",
@@ -172,6 +173,13 @@ export default function CartPage() {
           <div>
             <h2 className="font-display text-xl text-ink mb-1">Teslimat adresi</h2>
             <p className="text-xs text-ink/50">Kayıtlı adres seç veya yeni gir.</p>
+            {!user && (
+              <div className="mt-4 mb-2 p-4 bg-white border border-ink/10">
+                <p className="text-sm text-ink mb-3 text-center">Google ile giriş yap</p>
+                <GoogleSignInButton redirectTo="/sepet" />
+                <p className="text-xs text-ink/40 text-center mt-3">veya üye olmadan devam et</p>
+              </div>
+            )}
             {savedAddresses.length > 0 && (
               <div className="flex flex-col gap-2 mt-3">
                 {savedAddresses.map((a) => (
