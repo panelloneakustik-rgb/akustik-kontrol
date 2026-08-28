@@ -2,34 +2,34 @@
 
 Django API (`backend/`) + Next.js vitrin (`frontend/`).
 
-## Yerel
+**Canlı:** https://akustikkontrol.com.tr  
+**API / admin:** https://api.akustikkontrol.com.tr/admin/
 
-Python 3.13 + Node.js gerekir. Kökte `BASLAT.bat` veya:
+## Arkadaş / geliştirici (Windows)
 
-```bat
-cd backend
-python -m venv venv
-venv\Scripts\pip install -r requirements.txt
-copy .env.example .env
-venv\Scripts\python manage.py migrate
-venv\Scripts\python manage.py runserver 127.0.0.1:8000
-```
+1. Python 3 + Node.js LTS kur (`Add python.exe to PATH`).
+2. Repoyu klonla (Collaborator daveti):  
+   https://github.com/panelloneakustik-rgb/akustik-kontrol
+3. Kökteki **`BASLAT.bat`** dosyasına çift tıkla.  
+   `frontend` içinde `npm run dev` yazma — `next` tanınmaz.
+4. Tarayıcı: http://localhost:3000 — admin: http://127.0.0.1:8000/admin  
+   İlk seferde `createsuperuser` (backend venv):  
+   `backend\venv\Scripts\python.exe backend\manage.py createsuperuser`
 
-```bat
-cd frontend
-copy .env.local.example .env.local
-npm install
-npm run dev
-```
+İkinci açılışta `BASLAT.bat` kurulumu atlar, sadece sunucuları açar.
 
-Site: http://localhost:3000 — Admin: http://127.0.0.1:8000/admin
+## Kod → canlı
 
-`.env` ve `.env.local` GitHub’a **yüklenmez**. Sunucuda sen oluşturursun (iyzico, IMAP, Google, `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`).
+| Ne | Nasıl |
+|----|--------|
+| Site (Next.js) | `git push origin main` → Cloudflare Pages otomatik deploy |
+| API (Django) | VM SSH: `cd ~/akustik-kontrol && git pull && sudo systemctl restart akustik` |
+| Admin CSS | VM’de bir kez: `python manage.py collectstatic --noinput` |
 
-## Sunucu
+`.env` ve `.env.local` **asla commit edilmez**. Şablon: `backend/.env.example`, `frontend/.env.local.example`. Canlı sırlar sadece VM ve Cloudflare env’de.
 
-1. Repoyu klonla.
-2. `backend/.env` ve `frontend/.env.local` doldur (`backend/.env.example` şablon).
-3. `pip install -r backend/requirements.txt` + `migrate` + `collectstatic`.
-4. `frontend`: `npm install` + `npm run build` + `npm start` (veya `next build` çıktısını Nginx).
-5. IMAP için: `python manage.py check_invoice_emails` (cron, 5 dk).
+Yerel `.env`: `DJANGO_DEBUG=true`, `NEXT_PUBLIC_API_BASE=http://127.0.0.1:8000/api`.
+
+## IMAP (opsiyonel)
+
+`python manage.py check_invoice_emails` — cron / systemd timer (VM).
