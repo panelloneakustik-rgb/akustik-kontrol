@@ -11,6 +11,7 @@ import { getCategories, getStories } from "@/lib/api";
 export const metadata: Metadata = {
   title: "Akustik Kontrol",
   description: "Ses yalıtım ve dekorasyon e-ticaret sitesi",
+  icons: { icon: "/logo.png" },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
