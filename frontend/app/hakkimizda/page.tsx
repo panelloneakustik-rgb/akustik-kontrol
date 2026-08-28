@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <main className="px-8 py-10 max-w-4xl mx-auto">
+    <main className="px-4 sm:px-6 lg:px-8 py-10 max-w-4xl mx-auto">
       <nav className="text-xs text-ink/50 mb-6">
         <Link href="/" className="hover:text-burgundy">Ana Sayfa</Link>
         <span className="mx-2">/</span>

@@ -35,7 +35,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="px-8 py-16 max-w-sm mx-auto">
+    <main className="px-4 sm:px-6 lg:px-8 py-16 max-w-sm mx-auto">
       <h1 className="font-display text-3xl text-ink mb-8 text-center">Üye Ol</h1>
 
       <div className="mb-6">

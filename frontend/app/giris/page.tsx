@@ -29,7 +29,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="px-8 py-16 max-w-sm mx-auto">
+    <main className="px-4 sm:px-6 lg:px-8 py-16 max-w-sm mx-auto">
       <h1 className="font-display text-3xl text-ink mb-8 text-center">Giriş Yap</h1>
 
       <div className="mb-6">
@@ -49,7 +49,7 @@ export default function LoginPage() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border border-ink/20 px-3 py-2 text-sm bg-white"
+          className="border border-ink/20 px-3 py-2 text-base sm:text-sm bg-white"
         />
         <input
           type="password"
@@ -57,7 +57,7 @@ export default function LoginPage() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border border-ink/20 px-3 py-2 text-sm bg-white"
+          className="border border-ink/20 px-3 py-2 text-base sm:text-sm bg-white"
         />
 
         {error && <p className="text-xs text-burgundy">{error}</p>}

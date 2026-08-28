@@ -37,7 +37,7 @@ function PaymentForm() {
   }, [orderId]);
 
   return (
-    <main className="px-8 py-16 max-w-lg mx-auto">
+    <main className="px-4 sm:px-6 lg:px-8 py-16 max-w-lg mx-auto">
       <h1 className="font-display text-3xl text-ink mb-2 text-center">Ödeme</h1>
       {orderId ? (
         <p className="text-center text-ink/50 text-sm mb-8">Sipariş kodu: AK-{orderId}</p>
@@ -55,7 +55,7 @@ function PaymentForm() {
 
 export default function PaymentPage() {
   return (
-    <Suspense fallback={<main className="px-8 py-16 text-center text-ink/50">Yükleniyor...</main>}>
+    <Suspense fallback={<main className="px-4 sm:px-6 lg:px-8 py-16 text-center text-ink/50">Yükleniyor...</main>}>
       <PaymentForm />
     </Suspense>
   );

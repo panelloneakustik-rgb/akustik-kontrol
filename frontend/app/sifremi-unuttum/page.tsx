@@ -25,7 +25,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <main className="px-8 py-16 max-w-sm mx-auto">
+    <main className="px-4 sm:px-6 lg:px-8 py-16 max-w-sm mx-auto">
       <h1 className="font-display text-3xl text-ink mb-4 text-center">Şifremi Unuttum</h1>
       {sent ? (
         <p className="text-sm text-ink/70 text-center">

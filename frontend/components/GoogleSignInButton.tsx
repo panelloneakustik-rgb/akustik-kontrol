@@ -60,7 +60,7 @@ export default function GoogleSignInButton({ redirectTo = "/hesabim" }: { redire
       shape: "rectangular",
       logo_alignment: "left",
       locale: "tr",
-      width: "320",
+      width: String(Math.min(400, Math.max(240, buttonRef.current.parentElement?.clientWidth || 320))),
     });
   }, [loginWithGoogle, redirectTo, router]);
 

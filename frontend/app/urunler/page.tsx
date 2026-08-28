@@ -24,7 +24,7 @@ export default function AllProductsPage() {
   }, []);
 
   return (
-    <main className="px-8 py-10 max-w-6xl mx-auto">
+    <main className="px-4 sm:px-6 lg:px-8 py-10 max-w-6xl mx-auto">
       <nav className="text-xs text-ink/50 mb-6">
         <Link href="/" className="hover:text-burgundy">Ana Sayfa</Link>
         <span className="mx-2">/</span>
@@ -49,7 +49,7 @@ export default function AllProductsPage() {
                 Tümünü Gör
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
               {products.slice(0, 3).map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}

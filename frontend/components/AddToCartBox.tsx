@@ -51,12 +51,12 @@ export default function AddToCartBox({
 
       {error && <p className="text-xs text-burgundy">{error}</p>}
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
         <QuantitySelector value={qty} onChange={setQty} max={maxQty} />
         <button
           onClick={handleAdd}
           disabled={adding || maxQty <= 0}
-          className="flex-1 flex items-center justify-center gap-2 bg-burgundy hover:bg-burgundy-dark disabled:opacity-60 text-white text-sm font-medium py-3 px-6 transition-colors"
+          className="flex-1 flex items-center justify-center gap-2 bg-burgundy hover:bg-burgundy-dark disabled:opacity-60 text-white text-sm font-medium py-3 px-6 min-h-12 transition-colors"
         >
           {added ? <Check size={18} /> : <ShoppingCart size={18} />}
           {added ? "Sepete Eklendi" : "Sepete Ekle"}

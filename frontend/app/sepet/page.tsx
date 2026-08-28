@@ -31,7 +31,7 @@ const EMPTY_FORM: CheckoutInfo = {
   tax_number: "",
 };
 
-const inputClass = "border border-ink/20 px-3 py-2.5 text-sm bg-white w-full focus:outline-none focus:border-burgundy";
+const inputClass = "border border-ink/20 px-3 py-2.5 text-base sm:text-sm bg-white w-full focus:outline-none focus:border-burgundy";
 
 export default function CartPage() {
   const { cart, loading, updateItem, removeItem, refresh } = useCart();
@@ -95,12 +95,12 @@ export default function CartPage() {
   };
 
   if (loading) {
-    return <main className="px-8 py-16 text-center text-ink/50">Yükleniyor...</main>;
+    return <main className="px-4 sm:px-6 lg:px-8 py-16 text-center text-ink/50">Yükleniyor...</main>;
   }
 
   if (items.length === 0) {
     return (
-      <main className="px-8 py-24 max-w-lg mx-auto text-center">
+      <main className="px-4 sm:px-6 lg:px-8 py-24 max-w-lg mx-auto text-center">
         <h1 className="font-display text-3xl text-ink mb-3">Sepetiniz boş</h1>
         <p className="text-ink/60 mb-6">Alışverişe başlamak için ürünlere göz atabilirsiniz.</p>
         <Link href="/" className="inline-block bg-burgundy text-white text-sm font-medium py-3 px-6 hover:bg-burgundy-dark transition-colors">
@@ -111,13 +111,13 @@ export default function CartPage() {
   }
 
   return (
-    <main className="px-8 py-10 max-w-5xl mx-auto">
+    <main className="px-4 sm:px-6 lg:px-8 py-10 max-w-5xl mx-auto">
       <h1 className="font-display text-3xl text-ink mb-8">Sepetim</h1>
 
       <div className="flex flex-col gap-4 mb-12">
         {items.map((item) => (
-          <div key={item.id} className="flex gap-6 bg-card p-6">
-            <div className="relative w-36 h-36 shrink-0 bg-white">
+          <div key={item.id} className="flex flex-col sm:flex-row gap-4 sm:gap-6 bg-card p-4 sm:p-6">
+            <div className="relative w-full sm:w-36 h-48 sm:h-36 shrink-0 bg-white">
               {item.product_image ? (
                 <Image src={item.product_image} alt={item.product_name} fill className="object-cover" />
               ) : null}
@@ -205,7 +205,7 @@ export default function CartPage() {
 
           <input placeholder="* E-posta" type="email" value={form.email} onChange={set("email")} className={inputClass} />
 
-          <div className="grid sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <select value={form.country} onChange={set("country")} className={inputClass}>
               <option value="Türkiye">Türkiye</option>
             </select>
@@ -218,7 +218,7 @@ export default function CartPage() {
             <input placeholder="* İlçe" value={form.district} onChange={set("district")} className={inputClass} />
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <input placeholder="Telefon (Sabit)" value={form.phone} onChange={set("phone")} className={inputClass} />
             <input placeholder="* Cep Telefonu" value={form.mobile_phone} onChange={set("mobile_phone")} className={inputClass} />
             <input placeholder="* TC Kimlik No" value={form.tc_kimlik_no} onChange={set("tc_kimlik_no")} maxLength={11} className={inputClass} />
@@ -241,7 +241,7 @@ export default function CartPage() {
           </div>
 
           {form.invoice_type === "company" && (
-            <div className="grid sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <input placeholder="* Firma Adı" value={form.company_name} onChange={set("company_name")} className={inputClass} />
               <input placeholder="* Vergi Dairesi" value={form.tax_office} onChange={set("tax_office")} className={inputClass} />
               <input placeholder="* Vergi No" value={form.tax_number} onChange={set("tax_number")} className={inputClass} />

@@ -20,7 +20,7 @@ export default function Hero({ slides }: { slides: HeroSlide[] }) {
   if (slides.length === 0) return null;
 
   return (
-    <section className="relative mx-8 mt-6 rounded-sm overflow-hidden min-h-[600px] flex items-center">
+    <section className="relative mx-4 sm:mx-6 lg:mx-8 mt-4 sm:mt-6 rounded-sm overflow-hidden min-h-[240px] sm:min-h-[400px] lg:min-h-[560px] flex items-center">
       <div
         className="absolute inset-0 flex transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${index * 100}%)` }}
@@ -33,17 +33,17 @@ export default function Hero({ slides }: { slides: HeroSlide[] }) {
       </div>
 
       {slides[index] && (slides[index].badge_text || slides[index].title || slides[index].subtitle) && (
-        <div className="relative px-12 py-16 max-w-lg">
+        <div className="relative px-5 py-10 sm:px-12 sm:py-16 max-w-lg">
           {slides[index].badge_text && (
-            <span className="inline-block bg-burgundy text-white text-sm px-4 py-2 mb-6">
+            <span className="inline-block bg-burgundy text-white text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 mb-4 sm:mb-6">
               {slides[index].badge_text}
             </span>
           )}
           {slides[index].title && (
-            <h1 className="font-display text-5xl text-white mb-2">{slides[index].title}</h1>
+            <h1 className="font-display text-3xl sm:text-5xl text-white mb-2">{slides[index].title}</h1>
           )}
           {slides[index].subtitle && (
-            <p className="font-display italic text-2xl text-white/90">{slides[index].subtitle}</p>
+            <p className="font-display italic text-lg sm:text-2xl text-white/90">{slides[index].subtitle}</p>
           )}
           {slides[index].cta_text && slides[index].cta_link && (
             <Link

@@ -12,7 +12,7 @@ function ResultContent() {
   const success = status === "success";
 
   return (
-    <main className="px-8 py-24 max-w-lg mx-auto text-center">
+    <main className="px-4 sm:px-6 lg:px-8 py-24 max-w-lg mx-auto text-center">
       {success ? (
         <CheckCircle2 size={56} className="mx-auto mb-4 text-green-600" />
       ) : (
@@ -41,7 +41,7 @@ function ResultContent() {
 
 export default function OrderResultPage() {
   return (
-    <Suspense fallback={<main className="px-8 py-24 text-center text-ink/50">Yükleniyor...</main>}>
+    <Suspense fallback={<main className="px-4 sm:px-6 lg:px-8 py-24 text-center text-ink/50">Yükleniyor...</main>}>
       <ResultContent />
     </Suspense>
   );

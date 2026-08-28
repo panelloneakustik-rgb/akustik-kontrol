@@ -25,7 +25,7 @@ function SearchResults() {
   }, [query]);
 
   return (
-    <main className="px-8 py-10 max-w-6xl mx-auto">
+    <main className="px-4 sm:px-6 lg:px-8 py-10 max-w-6xl mx-auto">
       <nav className="text-xs text-ink/50 mb-6">
         <Link href="/" className="hover:text-burgundy">Ana Sayfa</Link>
         <span className="mx-2">/</span>
@@ -46,7 +46,7 @@ function SearchResults() {
       ) : products.length === 0 ? (
         <p className="text-ink/50 text-sm">Aramanızla eşleşen ürün bulunamadı.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
@@ -58,7 +58,7 @@ function SearchResults() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<main className="px-8 py-16 text-center text-ink/50">Yükleniyor...</main>}>
+    <Suspense fallback={<main className="px-4 sm:px-6 lg:px-8 py-16 text-center text-ink/50">Yükleniyor...</main>}>
       <SearchResults />
     </Suspense>
   );

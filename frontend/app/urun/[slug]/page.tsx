@@ -33,8 +33,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   ].filter((s) => s.value);
 
   return (
-    <main className="px-8 py-10 max-w-6xl mx-auto">
-      <nav className="text-xs text-ink/50 mb-6">
+    <main className="px-4 sm:px-6 lg:px-8 py-10 max-w-6xl mx-auto">
+      <nav className="text-xs text-ink/50 mb-6 break-words">
         <Link href="/" className="hover:text-burgundy">Ana Sayfa</Link>
         <span className="mx-2">/</span>
         <span>{product.category ? product.name ?? product.category : product.name}</span>
@@ -86,7 +86,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           <AddToCartBox productId={product.id} maxQty={product.stock || 0} colorSwatches={product.color_swatches} />
 
-          <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-ink/10 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-6 border-t border-ink/10 text-center">
             <div className="flex flex-col items-center gap-2">
               <Truck size={20} className="text-burgundy" />
               <span className="text-xs text-ink/60">2-4 iş günü içinde kargoda</span>

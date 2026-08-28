@@ -28,7 +28,7 @@ export default function AccountPage() {
   }, [user]);
 
   if (loading || !user) {
-    return <main className="px-8 py-16 text-center text-ink/50">Yükleniyor...</main>;
+    return <main className="px-4 sm:px-6 lg:px-8 py-16 text-center text-ink/50">Yükleniyor...</main>;
   }
 
   const initials =
@@ -49,19 +49,19 @@ export default function AccountPage() {
   ];
 
   return (
-    <main className="px-8 py-16 max-w-3xl mx-auto">
+    <main className="px-4 sm:px-6 lg:px-8 py-16 max-w-3xl mx-auto">
       <h1 className="font-display text-3xl text-ink mb-8 text-center">Hesabım</h1>
 
       <div className="relative overflow-hidden bg-gradient-to-br from-burgundy to-burgundy-dark p-6 mb-10 rounded-xl shadow-md">
         <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-white/5" />
         <div className="absolute -right-2 bottom-0 w-20 h-20 rounded-full bg-white/5" />
-        <div className="relative flex items-center gap-5">
+        <div className="relative flex items-center gap-4 min-w-0">
           <div className="w-20 h-20 bg-white/15 backdrop-blur text-white flex items-center justify-center font-display text-2xl shrink-0 rounded-full border border-white/20">
             {initials}
           </div>
           <div className="flex flex-col gap-2">
-            <span className="text-white font-medium">{user.full_name || "Üye"}</span>
-            <span className="text-white/80 text-sm">{user.email}</span>
+            <span className="text-white font-medium break-words">{user.full_name || "Üye"}</span>
+            <span className="text-white/80 text-sm break-all">{user.email}</span>
             <span className="self-start text-xs font-medium text-gold bg-white/10 border border-gold/50 rounded-full px-3 py-1">
               ÜYE
             </span>
@@ -74,7 +74,7 @@ export default function AccountPage() {
           <Link
             key={href}
             href={href}
-            className={`group relative flex flex-col items-center gap-3 p-6 rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 text-center ${
+            className={`group relative flex flex-col items-center gap-3 p-4 sm:p-6 rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 text-center min-h-[7.5rem] ${
               highlight
                 ? "bg-burgundy text-white hover:bg-burgundy-dark"
                 : "bg-card text-ink hover:bg-white"

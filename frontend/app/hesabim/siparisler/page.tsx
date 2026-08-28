@@ -129,11 +129,11 @@ export default function OrdersPage() {
   }, [user]);
 
   if (authLoading || !user) {
-    return <main className="px-8 py-16 text-center text-ink/50">Yükleniyor...</main>;
+    return <main className="px-4 sm:px-6 lg:px-8 py-16 text-center text-ink/50">Yükleniyor...</main>;
   }
 
   return (
-    <main className="px-8 py-16 max-w-2xl mx-auto">
+    <main className="px-4 sm:px-6 lg:px-8 py-16 max-w-2xl mx-auto">
       <nav className="text-xs text-ink/50 mb-6">
         <Link href="/hesabim" className="hover:text-burgundy">Hesabım</Link>
         <span className="mx-2">/</span>

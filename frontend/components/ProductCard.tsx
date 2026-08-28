@@ -120,7 +120,7 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
 
         <div className="pt-4 px-4 flex flex-col gap-2 text-center">
-          <h3 className="text-sm font-semibold tracking-wide text-ink uppercase">{product.name}</h3>
+          <h3 className="text-xs sm:text-sm font-semibold tracking-wide text-ink uppercase leading-snug">{product.name}</h3>
 
           <div className="flex flex-col items-center">
             {hasDiscount && (
@@ -135,7 +135,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <button
           onClick={handleAddToCart}
           disabled={adding || product.stock <= 0}
-          className="w-full flex items-center justify-center gap-2 bg-burgundy hover:bg-burgundy-dark disabled:opacity-60 text-white text-sm font-medium py-2 transition-colors"
+          className="w-full flex items-center justify-center gap-2 bg-burgundy hover:bg-burgundy-dark disabled:opacity-60 text-white text-xs sm:text-sm font-medium py-3 min-h-11 transition-colors"
         >
           {added ? <Check size={16} /> : <ShoppingCart size={16} />}
           {product.stock <= 0 ? "Stokta yok" : added ? "Eklendi" : "Sepete Ekle"}

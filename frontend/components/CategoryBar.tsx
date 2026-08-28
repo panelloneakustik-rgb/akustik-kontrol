@@ -12,7 +12,7 @@ export default function CategoryBar({ stories }: { stories: Story[] }) {
 
   return (
     <>
-      <div className="flex gap-8 overflow-x-auto px-8 py-6 bg-cream border-b border-ink/10">
+      <div className="flex gap-4 overflow-x-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 bg-cream border-b border-ink/10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {stories.map((story) => (
           <button
             key={story.id}
@@ -20,7 +20,7 @@ export default function CategoryBar({ stories }: { stories: Story[] }) {
             className="flex flex-col items-center gap-2 shrink-0 group"
           >
             <span className="p-[3px] rounded-full bg-gradient-to-tr from-gold via-burgundy to-amber-400 group-hover:scale-105 transition-transform">
-              <span className="relative block w-20 h-20 rounded-full overflow-hidden bg-white">
+              <span className="relative block w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-white">
                 <Image src={story.image} alt={story.title} fill className="object-cover" />
               </span>
             </span>
