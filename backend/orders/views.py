@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from config.session_keys import parse_session_key
 from products.models import Product
 from .models import Cart, CartItem, Order, OrderItem, ReturnRequest
 from .serializers import CartSerializer, OrderSerializer, ReturnRequestSerializer
@@ -27,7 +28,7 @@ def _ensure_stock(cart, product, desired_qty, exclude_item_id=None):
 
 
 def _get_cart(session_key):
-    cart, _ = Cart.objects.get_or_create(session_key=session_key)
+    cart, _ = Cart.objects.get_or_create(session_key=parse_session_key(session_key))
     return cart
 
 

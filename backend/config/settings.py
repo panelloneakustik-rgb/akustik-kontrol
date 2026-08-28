@@ -15,7 +15,7 @@ load_dotenv(BASE_DIR / ".env", encoding="utf-8-sig")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-local-only")
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "true").lower() in ("1", "true", "yes")
+DEBUG = os.environ.get("DJANGO_DEBUG", "false").lower() in ("1", "true", "yes")
 
 if not DEBUG and (not SECRET_KEY or SECRET_KEY.startswith("django-insecure")):
     raise ImproperlyConfigured("Production'da DJANGO_SECRET_KEY zorunlu (django-insecure olamaz).")
@@ -74,21 +74,29 @@ CSRF_TRUSTED_ORIGINS = [
     if o.strip()
 ]
 
+_auth = [
+    "rest_framework_simplejwt.authentication.JWTAuthentication",
+]
+if DEBUG:
+    _auth.append("rest_framework.authentication.SessionAuthentication")
+
+_renderers = ["rest_framework.renderers.JSONRenderer"]
+if DEBUG:
+    _renderers.append("rest_framework.renderers.BrowsableAPIRenderer")
+
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20,
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 20,
+    "DEFAULT_AUTHENTICATION_CLASSES": tuple(_auth),
+    "DEFAULT_RENDERER_CLASSES": tuple(_renderers),
+    "DEFAULT_THROTTLE_CLASSES": (
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
     ),
-    'DEFAULT_THROTTLE_CLASSES': (
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle',
-    ),
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '80/min',
-        'user': '200/min',
-        'login': '8/min',
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "80/min",
+        "user": "200/min",
+        "login": "8/min",
     },
 }
 
@@ -182,14 +190,14 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 X_FRAME_OPTIONS = "DENY"
 
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 if not DEBUG:
-    SECURE_SSL_REDIRECT = os.environ.get("SECURE_SSL_REDIRECT", "true").lower() in ("1", "true", "yes")
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    # Cloudflare Flexible: origin HTTP. Redirecting to HTTPS here causes 521.
+    SECURE_SSL_REDIRECT = os.environ.get("SECURE_SSL_REDIRECT", "false").lower() in ("1", "true", "yes")
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Email
@@ -211,12 +219,8 @@ DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Akustik Kontrol <nore
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
 
 
-# iyzico payment gateway (sandbox by default -- switch IYZICO_BASE_URL for production)
-# iyzico — production'da .env'den gelir; local'de sandbox varsayılanı
-_iyzico_sandbox_key = "sandbox-ac79gpAF1wOHX5EhAls1H9fGGJQt3844"
-_iyzico_sandbox_secret = "sandbox-wub4NeGj2KlOGQT0qJ2YjhYNtddMM0wJ"
-IYZICO_API_KEY = os.environ.get("IYZICO_API_KEY", _iyzico_sandbox_key if DEBUG else "")
-IYZICO_SECRET_KEY = os.environ.get("IYZICO_SECRET_KEY", _iyzico_sandbox_secret if DEBUG else "")
+IYZICO_API_KEY = os.environ.get("IYZICO_API_KEY", "")
+IYZICO_SECRET_KEY = os.environ.get("IYZICO_SECRET_KEY", "")
 IYZICO_BASE_URL = os.environ.get(
     "IYZICO_BASE_URL",
     "sandbox-api.iyzipay.com" if DEBUG else "api.iyzipay.com",

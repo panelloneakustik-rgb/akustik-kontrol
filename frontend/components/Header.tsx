@@ -38,7 +38,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 flex items-center justify-between px-8 py-7 bg-cream border-b border-ink/10">
       <Link href="/" className="flex items-center">
-        <Image src="/logo.png" alt="Akustik Kontrol" width={500} height={73} className="h-11 w-auto" priority />
+        <Image src="/logo.png" alt="Akustik Kontrol" width={500} height={73} className="h-11 w-auto" />
       </Link>
 
       <nav className="hidden md:flex gap-8 text-sm font-medium tracking-wide text-ink">

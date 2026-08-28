@@ -15,7 +15,8 @@ import iyzipay
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -31,6 +32,7 @@ def _iyzico_options():
 
 
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def initialize_payment(request, order_id):
     """POST /api/orders/<order_id>/pay/ -> {checkout_form_content: "<script>...</script>"}"""
     if not settings.IYZICO_API_KEY:
@@ -43,6 +45,10 @@ def initialize_payment(request, order_id):
         order = Order.objects.prefetch_related("items").get(pk=order_id)
     except Order.DoesNotExist:
         return Response({"detail": "Sipariş bulunamadı."}, status=status.HTTP_404_NOT_FOUND)
+
+    if order.user_id:
+        if not request.user.is_authenticated or request.user.id != order.user_id:
+            return Response({"detail": "Bu sipariş için ödeme yetkiniz yok."}, status=status.HTTP_403_FORBIDDEN)
 
     items = list(order.items.select_related("product"))
     if not items:

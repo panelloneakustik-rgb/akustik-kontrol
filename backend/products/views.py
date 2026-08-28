@@ -1,6 +1,7 @@
 from rest_framework import viewsets, filters, status
 from rest_framework.decorators import api_view, action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from config.session_keys import parse_session_key
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Category, Product, Favorite, HeroSlide, Story, Review  # (senin mevcut import'larına göre)
@@ -72,6 +73,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
 @api_view(["GET"])
 def favorites_list(request, session_key):
     """GET /api/favorites/<session_key>/ -> favorited products + their ids."""
+    session_key = parse_session_key(session_key)
     products = Product.objects.filter(favorited_by__session_key=session_key).select_related("category")
     return Response({
         "product_ids": list(products.values_list("id", flat=True)),
@@ -82,6 +84,7 @@ def favorites_list(request, session_key):
 @api_view(["POST"])
 def favorites_toggle(request, session_key):
     """POST /api/favorites/<session_key>/toggle/  body: {product: id}"""
+    session_key = parse_session_key(session_key)
     product = Product.objects.filter(pk=request.data.get("product")).first()
     if not product:
         return Response({"detail": "Ürün bulunamadı."}, status=status.HTTP_404_NOT_FOUND)
