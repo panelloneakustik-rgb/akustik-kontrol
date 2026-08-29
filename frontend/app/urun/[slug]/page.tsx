@@ -1,110 +1,15 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Truck, RotateCcw, ShieldCheck } from "lucide-react";
-import { getProductBySlug, getProducts, formatTL } from "@/lib/api";
-import ProductGallery from "@/components/ProductGallery";
-import AddToCartBox from "@/components/AddToCartBox";
-import RelatedProducts from "@/components/RelatedProducts";
-import ProductReviews from "@/components/ProductReviews";
+import ProductDetailClient from "@/components/ProductDetailClient";
+import { getProducts } from "@/lib/api";
 
 export async function generateStaticParams() {
   const products = await getProducts().catch(() => []);
   const slugs = products.map((p) => ({ slug: p.slug }));
-  return slugs.length > 0 ? slugs : [{ slug: "placeholder" }];
+  if (!slugs.some((s) => s.slug === "placeholder")) {
+    slugs.push({ slug: "placeholder" });
+  }
+  return slugs;
 }
 
-export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-
-  let product;
-  try {
-    product = await getProductBySlug(slug);
-  } catch {
-    notFound();
-  }
-
-  const images = product.images && product.images.length > 0 ? product.images : product.image ? [product.image] : [];
-  const hasDiscount = product.discount_percent > 0;
-
-  const specs = [
-    { label: "Ölçü", value: product.dimensions },
-    { label: "Malzeme", value: product.material },
-    { label: "Renk", value: product.color },
-  ].filter((s) => s.value);
-
-  return (
-    <main className="px-4 sm:px-6 lg:px-8 py-10 max-w-6xl mx-auto">
-      <nav className="text-xs text-ink/50 mb-6 break-words">
-        <Link href="/" className="hover:text-burgundy">Ana Sayfa</Link>
-        <span className="mx-2">/</span>
-        <span>{product.category ? product.name ?? product.category : product.name}</span>
-        <span className="mx-2">/</span>
-        <span className="text-ink">{product.name}</span>
-      </nav>
-
-      <div className="grid md:grid-cols-2 gap-10">
-        <ProductGallery images={images} alt={product.name} />
-
-        <div className="flex flex-col gap-4">
-          {product.is_new && (
-            <span className="self-start bg-gray-200 text-ink text-xs font-medium px-2 py-1">Yeni Ürün</span>
-          )}
-          <h1 className="font-display text-3xl text-ink">{product.name}</h1>
-
-          <div className="flex items-baseline gap-3">
-            {hasDiscount && (
-              <span className="text-base text-ink/40 line-through">{formatTL(product.price)}</span>
-            )}
-            <span className="text-2xl font-bold text-ink">{formatTL(product.discounted_price)}</span>
-            {hasDiscount && (
-              <span className="bg-burgundy text-white text-xs font-semibold px-2 py-1">
-                % {product.discount_percent} İndirim
-              </span>
-            )}
-          </div>
-
-          {product.description && (
-            <p className="text-sm text-ink/70 leading-relaxed">{product.description}</p>
-          )}
-
-          {specs.length > 0 && (
-            <table className="text-sm w-full max-w-sm mt-2">
-              <tbody>
-                {specs.map((s) => (
-                  <tr key={s.label} className="border-b border-ink/10">
-                    <td className="py-2 text-ink/50 w-28">{s.label}</td>
-                    <td className="py-2 text-ink font-medium">{s.value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-
-          <p className="text-xs text-ink/50">
-            {product.stock > 0 ? `Stokta ${product.stock} adet` : "Stokta yok"}
-          </p>
-
-          <AddToCartBox productId={product.id} maxQty={product.stock || 0} colorSwatches={product.color_swatches} />
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-6 border-t border-ink/10 text-center">
-            <div className="flex flex-col items-center gap-2">
-              <Truck size={20} className="text-burgundy" />
-              <span className="text-xs text-ink/60">2-4 iş günü içinde kargoda</span>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <RotateCcw size={20} className="text-burgundy" />
-              <span className="text-xs text-ink/60">14 gün içinde ücretsiz iade</span>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <ShieldCheck size={20} className="text-burgundy" />
-              <span className="text-xs text-ink/60">2 yıl garanti</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <ProductReviews slug={product.slug} />
-      <RelatedProducts products={product.related_products} />
-    </main>
-  );
+export default function ProductDetailPage() {
+  return <ProductDetailClient />;
 }

@@ -77,7 +77,7 @@ export async function getHeroSlides() {
 }
 
 export async function getProducts(categorySlug?: string) {
-  const qs = categorySlug ? `?category__slug=${categorySlug}` : "";
+  const qs = categorySlug ? `?category__slug=${categorySlug}&page_size=100` : "?page_size=100";
   const data = await getJSON<{ results: Product[] }>(`/products/${qs}`);
   return data.results;
 }
