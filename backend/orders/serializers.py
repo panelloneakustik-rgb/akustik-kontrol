@@ -1,3 +1,4 @@
+from config.media import absolute_file_url
 from rest_framework import serializers
 from products.models import Product
 from .models import Cart, CartItem, Order, OrderItem, ReturnRequest
@@ -5,7 +6,7 @@ from .models import Cart, CartItem, Order, OrderItem, ReturnRequest
 
 class CartItemSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(source="product.name", read_only=True)
-    product_image = serializers.ImageField(source="product.image", read_only=True)
+    product_image = serializers.SerializerMethodField()
     unit_price = serializers.DecimalField(source="product.discounted_price", max_digits=10, decimal_places=2, read_only=True)
     subtotal = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     stock = serializers.IntegerField(source="product.stock", read_only=True)
@@ -13,6 +14,11 @@ class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
         fields = ["id", "product", "product_name", "product_image", "unit_price", "quantity", "variant_note", "subtotal", "stock"]
+
+    def get_product_image(self, obj):
+        if not obj.product:
+            return None
+        return absolute_file_url(self.context.get("request"), obj.product.image)
 
 
 class CartSerializer(serializers.ModelSerializer):
@@ -36,8 +42,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     def get_product_image(self, obj):
         if not obj.product or not obj.product.image:
             return None
-        request = self.context.get("request")
-        return request.build_absolute_uri(obj.product.image.url) if request else obj.product.image.url
+        return absolute_file_url(self.context.get("request"), obj.product.image)
 
 
 class ReturnRequestSerializer(serializers.ModelSerializer):

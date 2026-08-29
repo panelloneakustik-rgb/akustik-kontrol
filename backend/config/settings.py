@@ -73,6 +73,16 @@ CSRF_TRUSTED_ORIGINS = [
     ).split(",")
     if o.strip()
 ]
+for _host in ALLOWED_HOSTS:
+    if not _host or _host in ("localhost", "127.0.0.1") or _host.replace(".", "").isdigit():
+        continue
+    _origin = f"https://{_host}"
+    if _origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_origin)
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 15 * 1024 * 1024
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 2000
 
 _auth = [
     "rest_framework_simplejwt.authentication.JWTAuthentication",

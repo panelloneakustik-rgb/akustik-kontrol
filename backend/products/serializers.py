@@ -1,28 +1,49 @@
+from config.media import absolute_file_url
 from rest_framework import serializers
 from .models import Category, Product, ProductImage, HeroSlide, ColorSwatch, Review, Story
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    icon = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
         fields = ["id", "name", "slug", "icon", "order"]
 
+    def get_icon(self, obj):
+        return absolute_file_url(self.context.get("request"), obj.icon)
+
 
 class ColorSwatchSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = ColorSwatch
         fields = ["id", "code", "name", "image"]
 
+    def get_image(self, obj):
+        return absolute_file_url(self.context.get("request"), obj.image)
+
 
 class HeroSlideSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = HeroSlide
         fields = ["id", "image", "badge_text", "title", "subtitle", "cta_text", "cta_link", "order"]
 
+    def get_image(self, obj):
+        return absolute_file_url(self.context.get("request"), obj.image)
+
 class StorySerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = Story
-        fields = ["id", "title", "image", "link_url", "order"]        
+        fields = ["id", "title", "image", "link_url", "order"]
+
+    def get_image(self, obj):
+        return absolute_file_url(self.context.get("request"), obj.image) 
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -50,9 +71,14 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = ProductImage
         fields = ["id", "image", "order"]
+
+    def get_image(self, obj):
+        return absolute_file_url(self.context.get("request"), obj.image)
 
 
 class ProductListSerializer(serializers.ModelSerializer):
@@ -61,6 +87,7 @@ class ProductListSerializer(serializers.ModelSerializer):
     discounted_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     gallery_images = ProductImageSerializer(many=True, read_only=True)
     images = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -70,13 +97,19 @@ class ProductListSerializer(serializers.ModelSerializer):
             "is_new", "is_bestseller", "stock",
         ]
 
+    def get_image(self, obj):
+        return absolute_file_url(self.context.get("request"), obj.image)
+
     def get_images(self, obj):
         request = self.context.get("request")
         urls = []
-        if obj.image:
-            urls.append(request.build_absolute_uri(obj.image.url) if request else obj.image.url)
+        main = absolute_file_url(request, obj.image)
+        if main:
+            urls.append(main)
         for gi in obj.gallery_images.all():
-            urls.append(request.build_absolute_uri(gi.image.url) if request else gi.image.url)
+            extra = absolute_file_url(request, gi.image)
+            if extra:
+                urls.append(extra)
         return urls
 
 
@@ -85,6 +118,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     discounted_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     gallery_images = ProductImageSerializer(many=True, read_only=True)
     images = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
     related_products = serializers.SerializerMethodField()
     color_swatches = ColorSwatchSerializer(many=True, read_only=True)
     average_rating = serializers.SerializerMethodField()
@@ -101,13 +135,19 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             "related_products",
         ]
 
+    def get_image(self, obj):
+        return absolute_file_url(self.context.get("request"), obj.image)
+
     def get_images(self, obj):
         request = self.context.get("request")
         urls = []
-        if obj.image:
-            urls.append(request.build_absolute_uri(obj.image.url) if request else obj.image.url)
+        main = absolute_file_url(request, obj.image)
+        if main:
+            urls.append(main)
         for gi in obj.gallery_images.all():
-            urls.append(request.build_absolute_uri(gi.image.url) if request else gi.image.url)
+            extra = absolute_file_url(request, gi.image)
+            if extra:
+                urls.append(extra)
         return urls
 
     def get_related_products(self, obj):
