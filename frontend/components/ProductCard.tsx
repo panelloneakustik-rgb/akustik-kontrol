@@ -66,7 +66,7 @@ export default function ProductCard({ product }: { product: Product }) {
       onMouseEnter={startCycle}
       onMouseLeave={stopCycle}
     >
-      <Link href={`/urun/${product.slug}`} className="block">
+      <Link href={`/urun?slug=${encodeURIComponent(product.slug)}`} className="block">
         <div className="relative aspect-square bg-white">
           <div className="absolute top-3 left-3 z-10 flex flex-col gap-2 items-start">
             {hasDiscount && (

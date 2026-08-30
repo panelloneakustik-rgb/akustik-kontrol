@@ -1,2 +1,0 @@
-# Yeni admin ürünleri de /urun/slug ile açılsın (statik export 404 olmasın)
-/urun/* /urun/placeholder.html 200

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Truck, RotateCcw, ShieldCheck } from "lucide-react";
 import { getProductBySlug, formatTL } from "@/lib/api";
 import ProductGallery from "@/components/ProductGallery";
@@ -14,7 +14,10 @@ type Detail = Awaited<ReturnType<typeof getProductBySlug>>;
 
 export default function ProductDetailClient() {
   const pathname = usePathname();
-  const slug = pathname.replace(/^\/urun\/?/, "").replace(/\/$/, "") || "";
+  const searchParams = useSearchParams();
+  const fromQuery = searchParams.get("slug")?.trim() || "";
+  const fromPath = pathname.replace(/^\/urun\/?/, "").replace(/\/$/, "");
+  const slug = fromQuery || (fromPath && fromPath !== "placeholder" ? fromPath : "");
   const [product, setProduct] = useState<Detail | null>(null);
   const [status, setStatus] = useState<"loading" | "ok" | "missing">("loading");
 
