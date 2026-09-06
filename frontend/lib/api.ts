@@ -1,4 +1,5 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://127.0.0.1:8000/api";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE ?? "https://api.akustikkontrol.com.tr/api";
 
 export type Category = {
   id: number;
@@ -97,6 +98,7 @@ export async function getProductBySlug(slug: string) {
     color: string;
     related_products: Product[];
     color_swatches: ColorSwatch[];
+    shipping_days: string;
   }>(`/products/${slug}/`);
 }
 
