@@ -1,6 +1,7 @@
 from config.media import absolute_file_url
 from rest_framework import serializers
 from .models import Category, Product, ProductImage, HeroSlide, ColorSwatch, Review, Story, ProductVariant
+from .stock import customer_visible_stock
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -117,6 +118,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 class ProductVariantSerializer(serializers.ModelSerializer):
     discounted_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     label = serializers.CharField(read_only=True)
+    stock = serializers.SerializerMethodField()
 
     class Meta:
         model = ProductVariant
@@ -124,6 +126,9 @@ class ProductVariantSerializer(serializers.ModelSerializer):
             "id", "label", "thickness", "dimensions", "density", "color",
             "price", "discount_percent", "discounted_price", "stock", "order",
         ]
+
+    def get_stock(self, obj):
+        return customer_visible_stock(obj.stock)
 
 
 class ProductListSerializer(serializers.ModelSerializer):
@@ -134,6 +139,7 @@ class ProductListSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
     option_count = serializers.SerializerMethodField()
+    stock = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -164,6 +170,9 @@ class ProductListSerializer(serializers.ModelSerializer):
             return len(variants)
         return obj.variants.count()
 
+    def get_stock(self, obj):
+        return customer_visible_stock(obj.stock)
+
 
 class ProductDetailSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
@@ -176,6 +185,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     variants = ProductVariantSerializer(many=True, read_only=True)
     average_rating = serializers.SerializerMethodField()
     review_count = serializers.SerializerMethodField()
+    stock = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -216,3 +226,6 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
     def get_review_count(self, obj):
         return obj.reviews.filter(visibility="everyone").count()
+
+    def get_stock(self, obj):
+        return customer_visible_stock(obj.stock)

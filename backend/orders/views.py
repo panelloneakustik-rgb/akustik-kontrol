@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from config.session_keys import parse_session_key
 from products.models import Product, ProductVariant
+from products.stock import customer_visible_stock
 from .models import Cart, CartItem, Order, OrderItem, ReturnRequest
 from .serializers import CartSerializer, OrderSerializer, ReturnRequestSerializer
 
@@ -19,7 +20,7 @@ def _cart_qty_for_product(cart, product, variant=None, exclude_item_id=None):
 
 
 def _ensure_stock(cart, product, desired_qty, variant=None, exclude_item_id=None):
-    stock = variant.stock if variant is not None else product.stock
+    stock = customer_visible_stock(variant.stock if variant is not None else product.stock)
     label = f"«{product.name}»"
     if variant and variant.label:
         label = f"«{product.name}» ({variant.label})"

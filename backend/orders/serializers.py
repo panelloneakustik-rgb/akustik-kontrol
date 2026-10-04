@@ -1,6 +1,7 @@
 from config.media import absolute_file_url
 from rest_framework import serializers
 from products.models import Product
+from products.stock import customer_visible_stock
 from .models import Cart, CartItem, Order, OrderItem, ReturnRequest
 
 
@@ -9,7 +10,7 @@ class CartItemSerializer(serializers.ModelSerializer):
     product_image = serializers.SerializerMethodField()
     unit_price = serializers.DecimalField(source="unit_price_value", max_digits=10, decimal_places=2, read_only=True)
     subtotal = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    stock = serializers.IntegerField(source="available_stock", read_only=True)
+    stock = serializers.SerializerMethodField()
 
     class Meta:
         model = CartItem
@@ -22,6 +23,9 @@ class CartItemSerializer(serializers.ModelSerializer):
         if not obj.product:
             return None
         return absolute_file_url(self.context.get("request"), obj.product.image)
+
+    def get_stock(self, obj):
+        return customer_visible_stock(obj.available_stock)
 
 
 class CartSerializer(serializers.ModelSerializer):

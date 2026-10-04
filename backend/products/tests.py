@@ -66,6 +66,18 @@ class ProductVariantApiTests(TestCase):
         )
         self.assertEqual(over.status_code, 400)
 
+    def test_public_stock_never_exceeds_five(self):
+        res = self.client.get("/api/products/piramit-sunger/")
+        self.assertEqual(res.status_code, 200)
+        by_thickness = {v["thickness"]: v["stock"] for v in res.data["variants"]}
+        self.assertEqual(by_thickness["40 mm"], 5)
+        self.assertEqual(by_thickness["20 mm"], 4)
+        self.assertEqual(res.data["stock"], 5)
+
+        listing = self.client.get("/api/products/")
+        row = next(p for p in listing.data["results"] if p["slug"] == "piramit-sunger")
+        self.assertEqual(row["stock"], 5)
+
     def test_add_requires_variant_when_several_exist(self):
         res = self.client.post(
             "/api/cart/bbbbbbbb-bbbb-4ccc-8ddd-eeeeeeeeeeee/add/",
