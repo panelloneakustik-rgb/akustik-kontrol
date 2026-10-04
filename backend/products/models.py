@@ -43,7 +43,12 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Original price (TL)")
     discount_percent = models.PositiveIntegerField(default=0, help_text="e.g. 25 for %25 Indirim")
 
-    image = models.ImageField(upload_to="products/", blank=True, null=True)
+    image = models.ImageField(
+        upload_to="products/",
+        blank=True,
+        null=True,
+        help_text="Kare görsel. Önerilen 1200×1200 px (en az 800×800). JPG veya WebP, mümkünse 2 MB altı.",
+    )
 
     is_new = models.BooleanField(default=False, help_text="Shows the 'Yeni Urun' badge")
     is_bestseller = models.BooleanField(default=False, help_text="Featured in 'Cok Satanlar'")
@@ -193,7 +198,10 @@ class ProductVariant(models.Model):
 class ProductImage(models.Model):
     """Extra gallery images for a product (shown on hover-cycle in the product card)."""
     product = models.ForeignKey(Product, related_name="gallery_images", on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="products/gallery/")
+    image = models.ImageField(
+        upload_to="products/gallery/",
+        help_text="Ana görsel ile aynı: kare 1200×1200 px, JPG/WebP, 2 MB altı.",
+    )
     order = models.PositiveIntegerField(default=0)
 
     class Meta:
