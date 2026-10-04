@@ -1,0 +1,35 @@
+{% extends "admin/change_form.html" %}
+
+{% block form_top %}
+  {{ block.super }}
+  {% if errors %}
+    {% with form=adminform.form %}
+      <div class="errornote" style="margin-bottom:1rem;">
+        <strong>Kaydedilemedi — nedeni:</strong>
+        <ul style="margin:0.5rem 0 0 1.2rem;">
+          {% for err in form.non_field_errors %}
+            <li>{{ err }}</li>
+          {% endfor %}
+          {% for field in form %}
+            {% if field.errors %}
+              <li><strong>{{ field.label }}:</strong> {{ field.errors.0 }}</li>
+            {% endif %}
+          {% endfor %}
+          {% for inline in inline_admin_formsets %}
+            {% for err in inline.formset.non_form_errors %}
+              <li>{{ inline.opts.verbose_name }}: {{ err }}</li>
+            {% endfor %}
+            {% for inline_form in inline.formset.forms %}
+              {% for field in inline_form %}
+                {% if field.errors %}
+                  <li><strong>{{ inline.opts.verbose_name }} — {{ field.label }}:</strong> {{ field.errors.0 }}</li>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endwith %}
+  {% endif %}
+{% endblock %}
+

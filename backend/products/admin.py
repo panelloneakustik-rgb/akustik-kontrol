@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin, messages
 from django.core.management import call_command
 from django.core.management.base import CommandError
@@ -30,9 +31,22 @@ class ColorSwatchAdmin(admin.ModelAdmin):
     preview.short_description = "Önizleme"
 
 
+class ProductImageAdminForm(forms.ModelForm):
+    class Meta:
+        model = ProductImage
+        fields = "__all__"
+
+    def has_changed(self):
+        if self.instance.pk:
+            return super().has_changed()
+        upload = self.files.get(self.add_prefix("image")) if self.files else None
+        return bool(upload)
+
+
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
-    extra = 2
+    form = ProductImageAdminForm
+    extra = 1
     fields = ("image", "order", "preview")
     readonly_fields = ("preview",)
 
@@ -47,14 +61,42 @@ class ProductImageInline(admin.TabularInline):
     preview.short_description = "Önizleme"
 
 
+class ProductVariantAdminForm(forms.ModelForm):
+    class Meta:
+        model = ProductVariant
+        fields = "__all__"
+
+    def has_changed(self):
+        if self.instance.pk:
+            return super().has_changed()
+
+        def raw(name):
+            if not self.data:
+                return ""
+            return str(self.data.get(self.add_prefix(name), "")).strip()
+
+        filled = any(
+            [
+                raw("thickness"),
+                raw("dimensions"),
+                raw("density"),
+                raw("color"),
+                raw("price") not in ("", "0", "0.0", "0.00"),
+            ]
+        )
+        return filled
+
+
 class ProductVariantInline(admin.TabularInline):
     model = ProductVariant
-    extra = 2
+    form = ProductVariantAdminForm
+    extra = 1
     fields = ("order", "thickness", "dimensions", "density", "color", "price", "discount_percent", "stock")
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    change_form_template = "admin/products/product/change_form.html"
     list_display = (
         "thumb",
         "name",
@@ -80,6 +122,13 @@ class ProductAdmin(admin.ModelAdmin):
             {
                 "fields": ("product_model", "material", "production"),
                 "description": "Model, yapı ve üretim tüm varyantlarda aynıdır. Kalınlık, ebat, yoğunluk, renk, fiyat ve stok aşağıda her satır için ayrı girilir.",
+            },
+        ),
+        (
+            "Fiyat ve stok",
+            {
+                "fields": ("price", "discount_percent", "stock"),
+                "description": "Varyant satırı doldurursanız fiyat ve stok oradan alınır. Varyant yoksa buradaki değer kullanılır.",
             },
         ),
         ("Durum", {"fields": ("is_new", "is_bestseller")}),

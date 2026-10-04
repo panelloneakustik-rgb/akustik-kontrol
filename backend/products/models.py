@@ -40,7 +40,12 @@ class Product(models.Model):
     slug = models.SlugField(max_length=220, unique=True, blank=True)
     description = models.TextField(blank=True)
 
-    price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Original price (TL)")
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        help_text="Varyant yoksa bu fiyat kullanılır (TL).",
+    )
     discount_percent = models.PositiveIntegerField(default=0, help_text="e.g. 25 for %25 Indirim")
 
     image = models.ImageField(

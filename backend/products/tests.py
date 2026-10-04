@@ -73,3 +73,53 @@ class ProductVariantApiTests(TestCase):
             format="json",
         )
         self.assertEqual(res.status_code, 400)
+
+
+class ProductAdminAddTests(TestCase):
+    def setUp(self):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+        self.user = User.objects.create_superuser("admin", "a@b.com", "pass")
+        self.cat = Category.objects.create(name="Süngerler", slug="sungerler-2")
+        self.client.force_login(self.user)
+
+    def test_add_product_without_filling_empty_variant_row(self):
+        url = "/admin/products/product/add/"
+        res = self.client.get(url)
+        self.assertEqual(res.status_code, 200)
+        data = {
+            "category": self.cat.pk,
+            "name": "Yeni Panel",
+            "slug": "yeni-panel",
+            "price": "250.00",
+            "discount_percent": "0",
+            "stock": "3",
+            "shipping_days": "2-4",
+            "is_new": "on",
+            "variants-TOTAL_FORMS": "1",
+            "variants-INITIAL_FORMS": "0",
+            "variants-MIN_NUM_FORMS": "0",
+            "variants-MAX_NUM_FORMS": "1000",
+            "variants-0-thickness": "",
+            "variants-0-dimensions": "",
+            "variants-0-density": "",
+            "variants-0-color": "",
+            "variants-0-price": "",
+            "variants-0-discount_percent": "0",
+            "variants-0-stock": "0",
+            "variants-0-order": "0",
+            "gallery_images-TOTAL_FORMS": "1",
+            "gallery_images-INITIAL_FORMS": "0",
+            "gallery_images-MIN_NUM_FORMS": "0",
+            "gallery_images-MAX_NUM_FORMS": "1000",
+            "gallery_images-0-image": "",
+            "gallery_images-0-order": "0",
+        }
+        res = self.client.post(url, data, follow=True)
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(Product.objects.filter(slug="yeni-panel").exists())
+        product = Product.objects.get(slug="yeni-panel")
+        self.assertEqual(product.variants.count(), 1)
+        self.assertEqual(product.variants.first().price, Decimal("250.00"))
+
