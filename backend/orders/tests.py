@@ -44,15 +44,13 @@ class StockAndCheckoutTests(TestCase):
         res = self._add(3)
         self.assertEqual(res.status_code, 400)
 
-    def test_customer_cannot_add_more_than_five_even_if_warehouse_is_larger(self):
+    def test_plenty_of_stock_is_hidden_from_the_cart(self):
         self.product.stock = 40
         self.product.save()
         res = self._add(6)
-        self.assertEqual(res.status_code, 400)
-        ok = self._add(5)
-        self.assertEqual(ok.status_code, 201)
-        self.assertEqual(ok.data["items"][0]["stock"], 5)
-        self.assertEqual(ok.data["items"][0]["quantity"], 5)
+        self.assertEqual(res.status_code, 201)
+        self.assertIsNone(res.data["items"][0]["stock"])
+        self.assertEqual(res.data["items"][0]["quantity"], 6)
 
     def test_checkout_decrements_stock(self):
         add = self._add(2)
